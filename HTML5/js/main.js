@@ -1,0 +1,131 @@
+//Preloader game state
+GameStates.Main = {
+	//load rom here
+	preload: function() {
+		//load the pixel graphic... A image file is used so scaling the game to a screen size is easier
+		game.load.image('pixel', 'pixel.jpg');
+	
+		//load the rom file
+		game.load.binary('romData', inputFilename, binaryLoadCallback, this);
+	
+		//create an instance of the cpu
+		c8 = new chip8();
+		
+		//initiate the emulator
+		c8.init();
+	},
+
+	//start the "Game"" state
+	create: function(){
+		//this.state.start('Menu');
+		console.log("creating...");
+		
+		//create pixel sprite
+		pixel = game.make.sprite(0, 0, 'pixel');
+		
+		//create our canvas and add it to the world
+		bmd = game.add.bitmapData(game.width, 160);
+		bmd.addToWorld();
+		
+		//create rom buffer
+		buffer = game.cache.getBinary('romData');
+		
+		//load rom...
+		c8.load();
+		
+		//clear the display
+		c8.clearDisplay();
+	},
+
+	//the update loop
+	update: function(){
+		//cycle the cpu twice due to browser refresh rate...
+		if(c8.running == true){
+			c8.cycle();
+			c8.cycle();
+			
+			//update the screen if the screen update flag has been set
+			if(c8.drawFlag == 1){
+				updateScreen();
+			}
+			
+			//clear the keyboard codes
+			for(var i=0; i<16; i++){
+				c8.key[i] = 0;
+			}
+		
+			/*keyboard mapping as follows
+			ORIGINAL        EMULATED
+
+			+-+-+-+-+       +-+-+-+-+
+
+			|1|2|3|C|       |1|2|3|4|
+
+			+-+-+-+-+       +-+-+-+-+
+
+			|4|5|6|D|       |Q|W|E|R|
+
+			+-+-+-+-+       +-+-+-+-+
+
+			|7|8|9|E|       |A|S|D|F|
+
+			+-+-+-+-+       +-+-+-+-+
+
+			|A|0|B|F|       |Z|X|C|V|
+
+			+-+-+-+-+       +-+-+-+-+
+
+			*/
+		
+			//detect keyboard input
+			if (game.input.keyboard.isDown(Phaser.Keyboard.ONE)){c8.key[0] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.TWO)){c8.key[1] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.THREE)){c8.key[2] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.FOUR)){c8.key[3] = 1;}
+		
+			if (game.input.keyboard.isDown(Phaser.Keyboard.Q)){c8.key[4] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.W)){c8.key[5] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.E)){c8.key[6] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.R)){c8.key[7] = 1;}
+		
+			if (game.input.keyboard.isDown(Phaser.Keyboard.A)){c8.key[8] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.S)){c8.key[9] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.D)){c8.key[10] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.F)){c8.key[11] = 1;}
+		
+			if (game.input.keyboard.isDown(Phaser.Keyboard.Z)){c8.key[12] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.X)){c8.key[13] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.C)){c8.key[14] = 1;}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.V)){c8.key[15] = 1;}
+		}		
+	}
+};
+
+//function to update the canvas
+function updateScreen(){
+	//clear screen
+	bmd.fill(0, 0, 0, 1);
+
+	//for each pixel on the screen decide to draw or not
+	for(var i=0;i<64;i++){
+		for(var ii=0;ii<32;ii++){
+			if(c8.screen[(ii*64)+i] == 1){
+				//var pixel = pixels.create(i*5, ii*5, 'pixel');
+				bmd.draw(pixel, i*5, ii*5);
+			}
+		}
+	} 
+	
+	//display the window
+	//game.add.image(screen);
+	
+	//set the draw flag back to 0
+	c8.drawFlag = 0;
+}
+
+//function to handle callback for rom loading
+function binaryLoadCallback(key, data) {
+	//create unit 8 array that will be read into memory
+    return new Uint8Array(data);
+
+}

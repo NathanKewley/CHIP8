@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+		<title>Chip-8</title>
+		<link rel="stylesheet" href="css/style.css" />
+		
+		<!-- Include Phaser -->
+		<script defer src="js/phaser.min.js"></script>
+		
+		<!-- Game specific js -->
+		<script src="js/cpu.js"></script>
+		<script src="js/init.js"></script>
+		<script defer src="js/main.js"></script>
+		<!-- Insert any other game states here -->
+	</head>
+	
+	<!-- create the div where the game will sit -->
+	<body>
+		<!-- ask the user to select a rom -->
+		<input type="file" id="fileInput" />
+		<output id="list"></output>
+	
+		<!-- create the game canvas -->
+		<div id="game"></div>
+		
+		<!-- detect when the user has selected a rom and begin the game -->
+		<script>			
+			//add event listener for when a file is selected
+			var fileInput = document.getElementById('fileInput');
+			
+			
+			fileInput.addEventListener('change', function(e){
+				inputFilename = "roms/" + this.value;
+				beginEmulation();
+			
+			});
+		</script>
+	</body>
+</html>
