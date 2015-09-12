@@ -1,0 +1,7 @@
+#ifndef GRAPHICS_INCLUDED
+#define GRAPHICS_INCLUDED
+//declare all function related to the graphics
+void setupGraphics();
+void updateScreen(chip8 &c8);
+
+#endif

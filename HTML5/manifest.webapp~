@@ -1,0 +1,14 @@
+{
+	"version": "0.1",
+	"name": "jess app",
+	"description": "firefox os phaser game by Jessica Kewley",
+	"launch_path": "/index.html",
+	"fullscreen": "true",
+	
+	"developer": {
+		"name": "Nathan Kewley",
+		"url": "http://nathankewley.com"
+	},
+	
+	"installs_allowed_from": ["*"]
+}

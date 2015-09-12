@@ -1,0 +1,14 @@
+{
+	"version": "0.1",
+	"name": "Chip-8 Emulator",
+	"description": "A basic Chip-8 interpreter written by Nathan Kewley using HTML5 with Phaser",
+	"launch_path": "/index.html",
+	"fullscreen": "true",
+	
+	"developer": {
+		"name": "Nathan Kewley",
+		"url": "http://nathankewley.com"
+	},
+	
+	"installs_allowed_from": ["*"]
+}
